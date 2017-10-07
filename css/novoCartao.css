@@ -29,7 +29,7 @@
 }
 
 .novoCartao-conteudo:focus {
-	height: 7em
+	/* height: 7em */
 }
 
 .novoCartao-salvar {

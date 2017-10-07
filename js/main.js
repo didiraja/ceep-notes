@@ -48,19 +48,7 @@ $(".novoCartao").submit(function(event){
 
     if (conteudo) {
 
-        var conteudoTag = $("<p>").addClass("cartao-conteudo").append(conteudo);
-
-        var botaoRemove = $("<button>").addClass("opcoesDoCartao-remove").attr("data-ref", "cartao_" + contador).addClass("opcoesDoCartao-opcao").text("Remover").click(removeCartao);
-        
-        var opcoes = $("<div>").addClass("opcoesDoCartao").append(botaoRemove);
-
-        var tipoCartao = decideTipoCartao(conteudo);
-
-        var conteudoTag = $("<p>").addClass("cartao-conteudo").append(conteudo);
-
-        $("<div>").attr("id","cartao_" + contador).addClass("cartao").addClass(tipoCartao).append(opcoes).append(conteudoTag).prependTo(".mural");
-
-        contador++;
+        adicionaCartao(conteudo, "#EBEF40");
         
     }
 
@@ -117,3 +105,98 @@ $("#busca").on("input", function () {
         $(".cartao").show();
     }
 });
+
+// Requisicao JSON
+$("#ajuda").click(function() {
+
+    $.getJSON("https://ceep.herokuapp.com/cartoes/instrucoes",
+        function(res) {
+            console.log(res);
+
+            res.instrucoes.forEach(function (instrucao) {
+                adicionaCartao(instrucao.conteudo, instrucao.cor);
+            });
+        });
+
+        console.log("Enviada requisicão. Aguardando resposta.");    
+    
+})
+
+// Novo Cartao através da Requisicao
+function adicionaCartao(conteudo, cor){
+
+    var contador = $(".cartao").length;
+    
+        contador++;
+ 
+        var botaoRemove = $("<button>").addClass("opcoesDoCartao-remove").
+        attr("data-ref", "cartao_" + contador).addClass("opcoesDoCartao-opcao").
+        text("Remover").click(removeCartao);
+        
+        var opcoes = $("<div>").addClass("opcoesDoCartao").append(botaoRemove);
+        
+        var tipoCartao = decideTipoCartao(conteudo);
+        
+        var conteudoTag = $("<p>").addClass("cartao-conteudo").append(conteudo);
+    
+        $("<div>").attr("id","cartao_" + contador).addClass("cartao").addClass(tipoCartao).
+        append(opcoes).append(conteudoTag).css("background-color",cor).prependTo(".mural");
+            
+};
+
+(function(){
+
+var usuario = "dico@caelum.com.br"
+
+$("#sync").click(function(){
+
+    $("#sync").removeClass("botaoSync--sincronizado");
+    $("#sync").addClass("botaoSync--esperando");
+
+    var cartoes = [];
+
+    $(".cartao").each(function(){
+        
+        var cartao = {};
+        cartao.conteudo = $(this).find(".cartao-conteudo").html();
+        cartoes.push(cartao);
+
+    });
+
+    var mural = {
+        usuario: usuario,
+        cartoes: cartoes
+    }
+
+    console.log("Enviada requisicão. Aguardando resposta.");
+
+    $.ajax({
+        url: "https://ceep.herokuapp.com/cartoes/salvar",
+        method: "POST",
+        data: mural,
+        success: function(res) {
+
+            $("#sync").addClass("botaoSync--sincronizado");
+            console.log(res.quantidade + " cartões salvos em " + res.usuario);
+        },
+        error: function() {
+            $("#sync").addClass("botaoSync--deuRuim");
+            console.log("Não foi possível salvar o mural");
+        },
+        complete: function() {
+            $("#sync").removeClass("botaoSync--esperando");
+        }
+    });
+
+});
+
+$.getJSON("https://ceep.herokuapp.com/cartoes/carregar?callback=?",{usuario: usuario}, function(res){
+        var cartoes = res.cartoes;
+        console.log(cartoes.length + " carregados em " + res.usuario);
+        cartoes.forEach(function(cartao){
+            adicionaCartao(cartao.conteudo);
+        });
+    }
+);
+
+})();
