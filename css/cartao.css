@@ -9,6 +9,22 @@
 	box-shadow: 1px 1px 1px rgba(0,0,0,.1);
 }
 
+.cartao .opcoesDoCartao-opcao {
+	opacity:0;
+	transition: opacity +2 ease;
+}
+
+.cartao:hover .opcoesDoCartao-opcao,.cartao:focus .opcoesDoCartao-opcao,
+.cartao .opcoesDoCartao:focus .opcoesDoCartao-opcao,
+.cartao .opcoesDoCartao:focus {
+	opacity: 1;
+}
+
+/* .cartao:focus, .cartao:hover {
+	outline: none;
+	transform: scale(1.1);
+}  */
+
 @media (min-width: 560px){
 
 	.cartao {

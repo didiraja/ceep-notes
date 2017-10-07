@@ -13,13 +13,13 @@ $(".novoCartao").submit(function(event){
         var contador = $(".cartao").length;
     
         if (conteudo) {
-    
             adiciona.adicionaCartao(conteudo, "#EBEF40");
-            
+            $(document).trigger("precisaSincronizar");
         }
     
         campoConteudo.val("");
-    
+        
+        //event.preventDefault();
     });
     
     

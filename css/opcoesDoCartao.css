@@ -23,6 +23,7 @@
 	background-size: 1em 1em;
 	background-position: center center;
 	background-repeat: no-repeat;
+	cursor: pointer;
 }
 
 .opcoesDoCartao-opcao + .opcoesDoCartao-opcao {
@@ -35,4 +36,25 @@
 
 .opcoesDoCartao-edita {
 	background-image: url("../img/edit.svg");
+}
+
+.opcoesDoCartao-cores {
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: .3em;
+}
+
+.opcoesDoCartao-radioCor {
+	display: none;
+}
+
+.opcoesDoCartao-cor {
+	background: currentColor;
+	border-color: rgba(0, 0, 0, .5);
+	box-sizing: border-box;
+}
+
+.opcoesDoCartao-radioCor:checked + .opcoesDoCartao-cor {
+	background: currentcolor;
+	border: 5px solid rgba(0, 0, 0, .5);
 }
